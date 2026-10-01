@@ -28,7 +28,7 @@ Stores information used by the assistant. Session memory handles short-term conv
 ## MLS Databases :
 Contains rets_property (active MLS listings) and california_sold (sold property transactions)
 
-## Architecture Workflow
+# Architecture Workflow
 
 ```mermaid
 flowchart TD
