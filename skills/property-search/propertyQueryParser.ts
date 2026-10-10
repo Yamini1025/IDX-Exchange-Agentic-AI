@@ -24,7 +24,7 @@ export async function parsePropertyQuery(query: string) {
     baths:    bathsMatch ? Number(bathsMatch[1]) : null,
     sqft:     sqftMatch  ? Number(sqftMatch[1].replace(/,/g,""))  : null,
     type:     typeKey ? typeMap[typeKey] : null,
-    pool:     poolMatch ? "True" : null,
-    hasView:  viewMatch  ? "True" : null,
+    pool:     poolMatch ? "1" : null,
+    hasView:  viewMatch  ? "1" : null,
   };
 }

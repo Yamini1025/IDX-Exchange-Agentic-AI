@@ -1,0 +1,11 @@
+.env
+
+# Dependencies
+node_modules/
+
+# Environment secrets
+.env
+.env.*
+
+# Build output
+dist/

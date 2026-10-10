@@ -8,7 +8,7 @@ const tests = [
             maxPrice: 1500000,
             beds: 3,
             type: "Condominium",
-            pool: "True",
+            pool: "1",
         },
     },
     {
@@ -18,7 +18,7 @@ const tests = [
             maxPrice: 900000,
             beds: 2,
             type: "Townhouse",
-            pool: "True",
+            pool: "1",
         },
     },
     {
@@ -28,7 +28,7 @@ const tests = [
             maxPrice: 1200000,
             beds: 4,
             type: "SingleFamilyResidence",
-            hasView: "True",
+            hasView: "1",
         },
     },
     {
@@ -38,7 +38,7 @@ const tests = [
             maxPrice: 850000,
             beds: 3,
             type: "Condominium",
-            pool: "True",
+            pool: "1",
         },
     },
     {
@@ -56,7 +56,7 @@ const tests = [
             maxPrice: 800000,
             beds: 2,
             baths: 2,
-            pool: "True",
+            pool: "1",
         },
     },
     {
@@ -66,7 +66,7 @@ const tests = [
             maxPrice: 2000000,
             beds: 5,
             baths: 3,
-            hasView: "True",
+            hasView: "1",
         },
     },
     {
@@ -96,7 +96,7 @@ const tests = [
             beds: 4,
             baths: 2.5,
             type: "Townhouse",
-            pool: "True",
+            pool: "1",
         },
     },
 ]
