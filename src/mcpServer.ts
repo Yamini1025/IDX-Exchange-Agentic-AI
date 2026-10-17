@@ -27,7 +27,7 @@ server.registerTool(
   },
   async ({ query }) => {
     try {
-      const results = await searchProperties(query);
+      const results = await searchProperties("whatsapp-user", query);
 
       return {
         content: [
