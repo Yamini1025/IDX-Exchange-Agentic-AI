@@ -41,11 +41,15 @@ Use this tool for questions such as:
 
 ## Interpretation Guidelines
 
-1. Use the tools' returned data rather than inventing market statistics.
-2. State the city and period covered.
-3. Distinguish average prices from median prices.
-4. Explain that month-to-month changes in average closing price can reflect differences in the mix of homes sold, not just changes in underlying home values.
-5. Identify incomplete months when the available data indicates a month is incomplete.
-6. If no qualifying data is returned, explain that the available dataset does not provide a result.
-7. Do not describe a month-over-month average-price change as a definitive measure of home appreciation.
-8. Treat these statistics as descriptive historical data, not a guarantee of future prices.
+1. For broad questions about a city's housing market, call both `get_city_market_summary` and `get_city_price_trend` and base the answer on their returned results.
+2. For questions about one specific metric, call the relevant tool rather than fetching unnecessary data.
+3. Use returned tool data only; never invent statistics or fill gaps with estimates.
+4. State the city and the actual date or month range covered by the returned data.
+5. Include median closing price, average days on market, and list-to-close percentage in broad market summaries when those values are available.
+6. Report the monthly trend and month-over-month changes when trend data is available. Distinguish average closing prices from median closing prices.
+7. Check `earliestCloseDate`, `latestCloseDate`, and `dataCoverageNote` when returned. If the available records cover less than 12 months, explicitly disclose the shorter period and do not call it a complete 12-month trend.
+8. Identify incomplete months when the data supports doing so. Do not assume the latest month is incomplete without checking its date coverage.
+9. Explain that month-to-month changes in average closing price can reflect differences in the mix of homes sold, not just changes in underlying home values.
+10. If no qualifying data is returned, explain that the available dataset does not provide a result.
+11. Treat these statistics as descriptive historical data, not a guarantee of future prices.
+12. If a required tool fails or is unavailable, state that limitation instead of fabricating an answer.
