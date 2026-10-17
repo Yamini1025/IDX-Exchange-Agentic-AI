@@ -1,3 +1,4 @@
+
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
@@ -13,23 +14,49 @@ async function main() {
     cwd: process.cwd(),
   });
 
-  await client.connect(transport);
+  try {
+    await client.connect(transport);
 
-  const tools = await client.listTools();
-  console.log("Available tools:", tools.tools.map((t) => t.name));
+    const tools = await client.listTools();
+    const toolNames = tools.tools.map((tool) => tool.name);
 
-  const result = await client.callTool({
-    name: "search_sold_comps",
-    arguments: {
-        city: "Irvine",
-        months: 12,
-    },
-  });
+    console.log("Available tools:", toolNames);
 
-  console.log(JSON.stringify(result, null, 2));
+    const expectedTools = [
+      "search_properties",
+      "search_sold_comps",
+      "get_city_market_summary",
+      "get_city_price_trend",
+    ];
 
-  console.log(JSON.stringify(result, null, 2));
-  await client.close();
+    for (const name of expectedTools) {
+      if (!toolNames.includes(name)) {
+        throw new Error(`Expected MCP tool not registered: ${name}`);
+      }
+    }
+
+    console.log("\nAll four expected tools are registered.");
+
+    console.log("\nTesting city market summary...");
+    const summary = await client.callTool({
+      name: "get_city_market_summary",
+      arguments: { city: "Pasadena" },
+    });
+    console.log(JSON.stringify(summary, null, 2));
+
+    console.log("\nTesting city price trend...");
+    const trend = await client.callTool({
+      name: "get_city_price_trend",
+      arguments: { city: "Pasadena", months: 12 },
+    });
+    console.log(JSON.stringify(trend, null, 2));
+
+  } finally {
+    await client.close();
+  }
 }
 
-main().catch(console.error);
+main().catch((error) => {
+  console.error("MCP client test failed:", error);
+  process.exitCode = 1;
+});
