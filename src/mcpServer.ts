@@ -1,3 +1,7 @@
+import {
+  semanticPropertySearch,
+  closeEmbeddingPool,
+} from "./services/propertyEmbeddings";
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -184,6 +188,52 @@ server.registerTool(
     }
   }
 );
+
+// Semantic search for active properties
+server.registerTool(
+  "semantic_property_search",
+  {
+    description:
+      "Find the top matching active property listings using semantic similarity. Understands natural-language descriptions such as 'charming craftsman home with mountain views and character,' even when exact keywords differ.",
+    inputSchema: {
+      query: z.string().min(1).describe(
+        "Describe the property you're looking for in natural language."
+      ),
+      limit: z.number().int().min(1).max(10).optional().describe(
+        "Maximum number of results. Defaults to 5."
+      ),
+    },
+  },
+  async ({ query, limit }) => {
+    try {
+      const results = await semanticPropertySearch(query, limit ?? 5);
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: results.length
+              ? JSON.stringify(results, null, 2)
+              : "No semantically similar properties found. Try generating more property embeddings.",
+          },
+        ],
+      };
+    } catch (error) {
+      console.error("Semantic property search failed:", error);
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: "Semantic property search failed. Check server logs.",
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
 const transport = new StdioServerTransport();
 
 async function main() {
@@ -192,6 +242,7 @@ async function main() {
 
 async function shutdown() {
   await closePool();
+  await closeEmbeddingPool();
   process.exit(0);
 }
 

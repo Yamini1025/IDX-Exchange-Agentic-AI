@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/Yamini1025/IDX-Exchange-Agentic-AI#readme",
   "dependencies": {
+    "@google/genai": "^2.32.0",
     "@modelcontextprotocol/sdk": "^1.32.1",
     "dotenv": "^18.0.7",
     "mysql2": "^3.24.5"

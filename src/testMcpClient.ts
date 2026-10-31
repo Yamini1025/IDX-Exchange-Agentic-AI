@@ -27,6 +27,7 @@ async function main() {
       "search_sold_comps",
       "get_city_market_summary",
       "get_city_price_trend",
+      "semantic_property_search",
     ];
 
     for (const name of expectedTools) {
@@ -35,7 +36,7 @@ async function main() {
       }
     }
 
-    console.log("\nAll four expected tools are registered.");
+    console.log("\nAll five expected tools are registered.");
 
     console.log("\nTesting city market summary...");
     const summary = await client.callTool({
@@ -50,6 +51,16 @@ async function main() {
       arguments: { city: "Pasadena", months: 12 },
     });
     console.log(JSON.stringify(trend, null, 2));
+
+    console.log("\nTesting semantic property search...");
+    const semanticResults = await client.callTool({
+      name: "semantic_property_search",
+      arguments: {
+        query: "charming craftsman home with mountain views and character",
+        limit: 5,
+      },
+    });
+    console.log(JSON.stringify(semanticResults, null, 2));
 
   } finally {
     await client.close();
