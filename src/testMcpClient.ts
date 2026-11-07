@@ -1,4 +1,3 @@
-
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
@@ -28,6 +27,7 @@ async function main() {
       "get_city_market_summary",
       "get_city_price_trend",
       "semantic_property_search",
+      "recommend_similar_properties",
     ];
 
     for (const name of expectedTools) {
@@ -36,7 +36,7 @@ async function main() {
       }
     }
 
-    console.log("\nAll five expected tools are registered.");
+    console.log("\nAll six expected tools are registered.");
 
     console.log("\nTesting city market summary...");
     const summary = await client.callTool({
@@ -61,6 +61,16 @@ async function main() {
       },
     });
     console.log(JSON.stringify(semanticResults, null, 2));
+
+    console.log("\nTesting property recommendations...");
+    const recommendations = await client.callTool({
+      name: "recommend_similar_properties",
+      arguments: {
+        listingId: "1118372790",
+        limit: 5,
+      },
+    });
+    console.log(JSON.stringify(recommendations, null, 2));
 
   } finally {
     await client.close();

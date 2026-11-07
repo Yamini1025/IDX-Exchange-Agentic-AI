@@ -17,7 +17,7 @@ const pool = mysql.createPool({
 const MODEL = "gemini-embedding-001";
 const DIMENSIONS = 768;
 
-interface Listing {
+export interface Listing {
   L_ListingID: string;
   L_City: string | null;
   L_Type_: string | null;
@@ -26,7 +26,7 @@ interface Listing {
   YearBuilt: number | null;
 }
 
-function buildListingText(listing: Listing): string {
+export function buildListingText(listing: Listing): string {
   return [
     `Property type: ${listing.L_Type_ ?? "Unknown"}`,
     `City: ${listing.L_City ?? "Unknown"}`,
@@ -36,7 +36,7 @@ function buildListingText(listing: Listing): string {
   ].join("\n");
 }
 
-async function generateEmbedding(text: string): Promise<number[]> {
+export async function generateEmbedding(text: string): Promise<number[]> {
   const result = await ai.models.embedContent({
     model: MODEL,
     contents: text.slice(0, 8000),
@@ -54,7 +54,7 @@ async function generateEmbedding(text: string): Promise<number[]> {
   return values;
 }
 
-function cosineSimilarity(a: number[], b: number[]): number {
+export function cosineSimilarity(a: number[], b: number[]): number {
   if (a.length !== b.length) {
     throw new Error("Embedding dimensions do not match");
   }

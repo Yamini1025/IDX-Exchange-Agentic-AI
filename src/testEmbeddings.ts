@@ -8,7 +8,7 @@ const ai = new GoogleGenAI({
 async function main() {
   const result = await ai.models.embedContent({
     model: "gemini-embedding-001",
-    contents: "A charming craftsman home in Pasadena with mountain views.",
+    contents: "modern home with an open floor plan and spacious backyard.",
     config: {
       outputDimensionality: 768,
     },

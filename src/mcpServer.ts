@@ -11,6 +11,7 @@ import "dotenv/config";
 import { searchProperties } from "./services/propertySearchService";
 import { getSoldComps } from "./services/soldComps";
 import { closePool } from "./db/connection";
+import { getPropertyRecommendations } from "./services/recommendationEngine";
 
 import {
   getCityMarketSummary,
@@ -226,6 +227,52 @@ server.registerTool(
           {
             type: "text" as const,
             text: "Semantic property search failed. Check server logs.",
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Recommend similar properties with sold-comps price validation
+server.registerTool(
+  "recommend_similar_properties",
+  {
+    description:
+      "Recommend the top similar active listings for a selected property using structured and semantic similarity, with asking-price validation against recent sold comparables.",
+    inputSchema: {
+      listingId: z.string().min(1).describe(
+        "MLS listing ID of the property the user likes."
+      ),
+      limit: z.number().int().min(1).max(20).optional().describe(
+        "Maximum number of recommendations. Defaults to 5."
+      ),
+    },
+  },
+  async ({ listingId, limit }) => {
+    try {
+      const result = await getPropertyRecommendations(
+        listingId.trim(),
+        limit ?? 5,
+      );
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      console.error("Property recommendations failed:", error);
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: "Property recommendations failed. Check server logs.",
           },
         ],
         isError: true,
