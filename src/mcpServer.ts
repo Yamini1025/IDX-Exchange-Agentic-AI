@@ -12,6 +12,7 @@ import { searchProperties } from "./services/propertySearchService";
 import { getSoldComps } from "./services/soldComps";
 import { closePool } from "./db/connection";
 import { getPropertyRecommendations } from "./services/recommendationEngine";
+import { askRagQuestion } from "./services/ragService";
 
 import {
   getCityMarketSummary,
@@ -273,6 +274,46 @@ server.registerTool(
           {
             type: "text" as const,
             text: "Property recommendations failed. Check server logs.",
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Ask the RAG real estate knowledge assistant
+server.registerTool(
+  "ask_real_estate_knowledge",
+  {
+    description:
+      "Answer questions about real estate terminology, MLS database fields, and California market statistics using indexed project documents.",
+    inputSchema: {
+      question: z.string().min(1).describe(
+        "A question about real estate concepts, MLS fields, or market data."
+      ),
+    },
+  },
+  async ({ question }) => {
+    try {
+      const answer = await askRagQuestion(question);
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: answer,
+          },
+        ],
+      };
+    } catch (error) {
+      console.error("RAG knowledge search failed:", error);
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: "Knowledge search is temporarily unavailable. Please try again later.",
           },
         ],
         isError: true,
