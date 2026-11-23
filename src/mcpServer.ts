@@ -13,6 +13,7 @@ import { getSoldComps } from "./services/soldComps";
 import { closePool } from "./db/connection";
 import { getPropertyRecommendations } from "./services/recommendationEngine";
 import { askRagQuestion } from "./services/ragService";
+import { orchestrate } from "./services/orchestrator";
 
 import {
   getCityMarketSummary,
@@ -314,6 +315,48 @@ server.registerTool(
           {
             type: "text" as const,
             text: "Knowledge search is temporarily unavailable. Please try again later.",
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+);
+
+// Unified real estate query orchestrator
+server.registerTool(
+  "orchestrate_real_estate_query",
+  {
+    description:
+      "Intelligently routes real estate requests to property search, market analysis, recommendations, knowledge, or email drafting agents. Supports combined property search and market analysis.",
+    inputSchema: {
+      query: z.string().min(1).describe(
+        "Natural-language real estate request."
+      ),
+    },
+  },
+  async ({ query }) => {
+    try {
+      const result = await orchestrate(query, "whatsapp-user");
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: typeof result === "string"
+              ? result
+              : JSON.stringify(result, null, 2),
+          },
+        ],
+      };
+    } catch (error) {
+      console.error("Orchestration failed:", error);
+
+      return {
+        content: [
+          {
+            type: "text" as const,
+            text: "Request orchestration failed. Check server logs.",
           },
         ],
         isError: true,
